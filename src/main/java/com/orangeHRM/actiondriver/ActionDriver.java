@@ -40,6 +40,7 @@ public class ActionDriver {
 
 		String filePath;
 		log.info("====== Running the tests in " + envName + " environment ======");
+		
 		switch (envName.toLowerCase().trim()) {
 		case "dev": {
 			filePath = "./src/test/resources/config/dev.config.properties";

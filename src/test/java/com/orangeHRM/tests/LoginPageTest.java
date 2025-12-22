@@ -37,7 +37,7 @@ public class LoginPageTest extends BaseTest{
 	@Description("Verifying Login Page title")
 	@Severity(SeverityLevel.MINOR)
 	@Owner("Anusha Bellala")
-	@Test
+	@Test(groups = "sanity")
 	public void loginPageTitleTest() {
 		String actualTitle = loginPage.loginPageTitle();
 		Assert.assertEquals(actualTitle, LoginPageConstants.LOGIN_PAGE_TITLE_IS);
