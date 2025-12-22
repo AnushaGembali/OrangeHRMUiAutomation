@@ -25,7 +25,7 @@ public class ActionDriver {
 	private BrowserUtil browserUtil;
 	private Properties prop;
 	private static ThreadLocal<WebDriver> tldriver = new ThreadLocal<WebDriver>();
-	private static final Logger Log = LogManager.getLogger(ActionDriver.class);
+	private static final Logger log = LogManager.getLogger(ActionDriver.class);
 	//warn, info, error, fatal
 	public static String isHighLight;
 
@@ -34,34 +34,31 @@ public class ActionDriver {
 		
 		String envName = System.getProperty("env");
 		if (envName == null) {
-			System.out.println("====== Running the tests in QA environment since no environment is passed ======");
+			log.info("====== Running the tests in QA environment since no environment is passed ======");
 			envName = "qa";
 		}
 
 		String filePath;
+		log.info("====== Running the tests in " + envName + " environment ======");
 		switch (envName.toLowerCase().trim()) {
 		case "dev": {
-			System.out.println("====== Running the tests in DEV environment ======");
 			filePath = "./src/test/resources/config/dev.config.properties";
 			break;
 		}
 		case "qa": {
-			System.out.println("====== Running the tests in QA environment ======");
 			filePath = "./src/test/resources/config/qa.config.properties";
 			break;
 		}
 		case "uat": {
-			System.out.println("====== Running the tests in UAT environment ======");
 			filePath = "./src/test/resources/config/uat.config.properties";
 			break;
 		}
 		case "prod": {
-			System.out.println("====== Running the tests in PROD environment ======");
 			filePath = "./src/test/resources/config/config.properties";
 			break;
 		}
 		default: {
-			System.out.println("====== Please pass a valid environment name ======");
+			log.error("====== Please pass a valid environment name ======");
 			throw new FrameworkException("======= Invalid Environment Name is passed ======");
 			}
 		}
@@ -71,7 +68,7 @@ public class ActionDriver {
 			prop = new Properties();
 			prop.load(fi);
 		} catch (IOException e) {
-			System.out.println("The configuration file is not found or can not read the file");
+			log.error("The configuration file is not found or can not read the file");
 		}
 		return prop;
 	}
@@ -100,7 +97,7 @@ public class ActionDriver {
 			break;
 		}
 		default: {
-			System.out.println("====== INVALID BROWSER =======");
+			log.error("====== INVALID BROWSER =======");
 			throw new BrowserException("====== INVALID BROWSER ======");
 		}
 		}
@@ -120,7 +117,7 @@ public class ActionDriver {
 		try {
 			browserUtil.launchURL(Url);
 		} catch (BrowserException e) {
-			System.out.println("====== Please provide correct Application URL ======");
+			log.error("====== Please provide correct Application URL ======");
 		}
 	}
 

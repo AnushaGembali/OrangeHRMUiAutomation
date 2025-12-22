@@ -2,6 +2,8 @@ package com.orangeHRM.base;
 
 import java.util.Properties;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
@@ -29,19 +31,23 @@ public class BaseTest {
 	protected LoginPage loginPage;
 	protected DashboardPage dashboardPage;
 	protected SoftAssert softAssert;
+	
+	private static final Logger log = LogManager.getLogger(BaseTest.class);
 
 	@Step("Initializing the browser and launching the application")
 	@Parameters({"browser"})
-	@BeforeTest
+	@BeforeTest(alwaysRun = true)
 	public void setUp(@Optional String browser) throws BrowserException 
 	{
+		log.info("Set up to initialize the WebDriver");
 		driverFactory = new ActionDriver();
 		prop = driverFactory.initProperties();
 		String browserName = prop.getProperty("browser");
 		if(browser !=null) {
 			browserName = browser;
 		}
-
+		
+		log.info("Launching " + browserName + "for running the tests ");
 		driver = driverFactory.initWebDriver(browserName);
 		softAssert = new SoftAssert();
 		driverFactory.launchApplicationURL();
@@ -49,13 +55,13 @@ public class BaseTest {
 	}
 
 	@Step("Closing the browser")
-	@AfterTest
+	@AfterTest(alwaysRun = true)
 	public void tearDown() {
 		driverFactory.closeBrowser();
 	}
 	
 
-	@AfterMethod
+	@AfterMethod(alwaysRun = true)
 	public void attachScreenshot(ITestResult result)
 	{
 		if(!result.isSuccess())

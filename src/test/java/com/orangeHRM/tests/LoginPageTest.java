@@ -24,7 +24,7 @@ public class LoginPageTest extends BaseTest{
 	@Description("Logging with valid credentials")
 	@Severity(SeverityLevel.CRITICAL)
 	@Owner("Anusha Bellala")
-	@Test(priority=Short.MAX_VALUE)
+	@Test(priority=Short.MAX_VALUE, groups = "sanity")
 	public void doLoginTest() {
 		String userName = prop.getProperty("userName");
 		String password = prop.getProperty("password");

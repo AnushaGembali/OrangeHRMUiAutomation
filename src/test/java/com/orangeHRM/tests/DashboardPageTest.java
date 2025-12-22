@@ -3,7 +3,6 @@ package com.orangeHRM.tests;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -12,20 +11,31 @@ import org.testng.annotations.Test;
 import com.orangeHRM.base.BaseTest;
 import com.orangeHRM.constants.DashboardPageConstants;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+
+@Epic("Dashboard Page testing")
+@Feature("Meta data and data inside Dashborad Page testing")
+@Story("Meta data and data inside Dashborad Page testing")
 public class DashboardPageTest extends BaseTest{
 	
-	@BeforeClass
+	@Description("Set up for Dashboard Page")
+	@BeforeClass(description = "Set up for Dashboard Page", alwaysRun = true)
 	public void doDashboardPageSetup() {
 		dashboardPage = loginPage.doLogin(prop.getProperty("userName"),prop.getProperty("password"));
 	}
 	
-	@Test
+	@Description("Testing Dashboard header text")
+	@Test(description = "Testing Dashboard header text")
 	public void dashboardPageHeaderTest() {
 		String actualHeader = dashboardPage.getDahsboardHeader();
 		Assert.assertEquals(actualHeader.toLowerCase(), DashboardPageConstants.DASHBOARD_PAGE_HEADER.toLowerCase());
 	}
 	
-	@Test
+	@Description("Test user Name in the drop down menu")
+	@Test(description = "Test user Name in the drop down menu")
 	public void userNameInMenuDropDownTest()
 	{
 		String actualUserName = dashboardPage.getUserNameFromMenu().toLowerCase();
@@ -33,13 +43,15 @@ public class DashboardPageTest extends BaseTest{
 		Assert.assertTrue(actualUserName.contains(expectedUserName));
 	}
 	
-	@Test(priority = Short.MAX_VALUE-2)
+	@Description("Test user Name in the drop down menu")
+	@Test(priority = Short.MAX_VALUE-2, groups = {"sanity", "regression"})
 	public void menuDropDownList()
 	{
 		List<String> dropDownList = dashboardPage.getDahsboardMenuItems();
 		Assert.assertEquals(dropDownList, DashboardPageConstants.DASHBORAD_MENU_ITEMS);
 	}
 	
+	@Description("Validate About option is displayed in the menu")
 	@Test(priority = Short.MAX_VALUE-1)
 	public void aboutMenuItemIsDisplayedTest()
 	{
@@ -47,6 +59,7 @@ public class DashboardPageTest extends BaseTest{
 		Assert.assertEquals(actualHeader.trim(), DashboardPageConstants.ABOUT_MENU_ITEM_HEADER);
 	}
 	
+	@Description("Validate the Data dispalyed in the About menu item")
 	@Test(priority = Short.MAX_VALUE, dependsOnMethods = {"aboutMenuItemIsDisplayedTest","menuDropDownList"})
 	public void aboutMenuItemDataTest()
 	{

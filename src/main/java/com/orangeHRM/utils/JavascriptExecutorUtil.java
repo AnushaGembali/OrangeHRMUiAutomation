@@ -89,7 +89,8 @@ public class JavascriptExecutorUtil {
 	
 	public void flashElement(WebElement element)  {
 		String backgroundColorOfEle = element.getCssValue("backgroundColor");
-		for(int i = 0; i < 100; i++) {
+		drawBorderUsingJs(element);
+		for(int i = 0; i < 30; i++) {
 			changeColorUsingJs(element, "rgb(0,200,0)") ; //Green
 			changeColorUsingJs(element, backgroundColorOfEle);
 		}
