@@ -42,7 +42,7 @@ pipeline
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                    dir('qa-repo'){
-					 git 'https://github.com/AnushaGembali/OrangeHRMUiAutomation.git'
+					 git branch: 'main', url: 'https://github.com/AnushaGembali/OrangeHRMUiAutomation.git'
                      bat "mvn clean test -DsuiteXmlFile=src/test/resources/testrunners/testng.xml -Denv=qa"
 				   }
                     
@@ -88,7 +88,7 @@ pipeline
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                   dir('qa-repo'){
-					  git 'https://github.com/AnushaGembali/OrangeHRMUiAutomation.git'
+					 git branch: 'main', url: 'https://github.com/AnushaGembali/OrangeHRMUiAutomation.git'
                       bat "mvn clean test -DsuiteXmlFile=src/test/resources/testrunners/testng_sanity.xml -Denv=uat"
 				  }
                 }
