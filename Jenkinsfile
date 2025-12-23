@@ -12,8 +12,10 @@ pipeline
         {
             steps
             {
-                 git 'https://github.com/jglick/simple-maven-project-with-tests.git'
-                 bat "mvn -Dmaven.test.failure.ignore=true clean package"
+                 dir('dev-repo'){
+					git 'https://github.com/jglick/simple-maven-project-with-tests.git'
+                 	bat "mvn -Dmaven.test.failure.ignore=true clean package"
+				 }
             }
             post 
             {
@@ -39,8 +41,10 @@ pipeline
         stage('Regression Automation Tests') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    git 'https://github.com/AnushaGembali/OrangeHRMUiAutomation.git'
-                    bat "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testrunners/testng.xml -Denv=qa"
+                   dir("qa-repo"){
+					 git 'https://github.com/AnushaGembali/OrangeHRMUiAutomation.git'
+                     bat "mvn clean test -DsuiteXmlFile=src/test/resources/testrunners/testng.xml -Denv=qa"
+				   }
                     
                 }
             }
@@ -83,9 +87,10 @@ pipeline
         stage('Sanity Automation Test') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    git 'https://github.com/AnushaGembali/OrangeHRMUiAutomation.git'
-                    bat "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testrunners/testng_sanity.xml -Denv=uat"
-                    
+                  dir('qa-repo'){
+					  git 'https://github.com/AnushaGembali/OrangeHRMUiAutomation.git'
+                      bat "mvn clean test -DsuiteXmlFile=src/test/resources/testrunners/testng_sanity.xml -Denv=uat"
+				  }
                 }
             }
         }
