@@ -35,19 +35,31 @@ public class BaseTest {
 	private static final Logger log = LogManager.getLogger(BaseTest.class);
 
 	@Step("Initializing the browser and launching the application")
-	@Parameters({"browser"})
+	@Parameters({"browser", "browserversion", "testname"})
 	@BeforeTest(alwaysRun = true)
-	public void setUp(@Optional String browser) throws BrowserException 
+	public void setUp(@Optional String browser, @Optional String browserVersion, @Optional String testName) throws BrowserException 
 	{
 		log.info("Set up to initialize the WebDriver");
 		driverFactory = new ActionDriver();
 		prop = driverFactory.initProperties();
+		
+		
 		String browserName = prop.getProperty("browser");
 		if(browser !=null) {
 			browserName = browser;
 		}
 		
-		log.info("Launching " + browserName + "for running the tests ");
+		log.info("Launching " + browserName + " for running the tests ");
+		
+		if(browserVersion != null) {
+			log.info("=== Running tests in browser version " + browserVersion + " ===");
+			 prop.setProperty("browserversion", browserVersion);
+		}
+		
+		if(testName != null) {
+			 prop.setProperty("testname", testName);
+		}
+
 		driver = driverFactory.initWebDriver(browserName);
 		softAssert = new SoftAssert();
 		driverFactory.launchApplicationURL();

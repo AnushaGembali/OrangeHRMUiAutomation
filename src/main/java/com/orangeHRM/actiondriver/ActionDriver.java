@@ -3,6 +3,8 @@ package com.orangeHRM.actiondriver;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.Duration;
 import java.util.Properties;
 
@@ -14,6 +16,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
 import com.orangeHRM.exceptions.BrowserException;
@@ -26,12 +29,13 @@ public class ActionDriver {
 	private Properties prop;
 	private static ThreadLocal<WebDriver> tldriver = new ThreadLocal<WebDriver>();
 	private static final Logger log = LogManager.getLogger(ActionDriver.class);
-	//warn, info, error, fatal
+	// warn, info, error, fatal
 	public static String isHighLight;
+	private OptionsManager opManager;
 
 //	mvn clean install -Denv="qa"
 	public Properties initProperties() {
-		
+
 		String envName = System.getProperty("env");
 		if (envName == null) {
 			log.info("====== Running the tests in QA environment since no environment is passed ======");
@@ -40,7 +44,7 @@ public class ActionDriver {
 
 		String filePath;
 		log.info("====== Running the tests in " + envName + " environment ======");
-		
+
 		switch (envName.toLowerCase().trim()) {
 		case "dev": {
 			filePath = "./src/test/resources/config/dev.config.properties";
@@ -61,7 +65,7 @@ public class ActionDriver {
 		default: {
 			log.error("====== Please pass a valid environment name ======");
 			throw new FrameworkException("======= Invalid Environment Name is passed ======");
-			}
+		}
 		}
 
 		try {
@@ -77,9 +81,22 @@ public class ActionDriver {
 	public WebDriver initWebDriver(String browserName) throws BrowserException {
 		isHighLight = prop.getProperty("highlight");
 		int implicitWait = Integer.parseInt(prop.getProperty("implicitWait", "0"));
+		boolean runInRemote = Boolean.parseBoolean(prop.getProperty("remote"));
+		
+		opManager = new OptionsManager(prop);
 
-		OptionsManager opManager = new OptionsManager(prop);
+		if (runInRemote) {
+			initRemoteWebDriver(browserName, implicitWait);
+		} else {
+			initLocalWebDriver(browserName, implicitWait);
+		}
+		getLocalDriver().manage().window().maximize();
+		getLocalDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait));
+		getLocalDriver().manage().deleteAllCookies();
+		return getLocalDriver();
+	}
 
+	private void initLocalWebDriver(String browserName, int implicitWait) throws BrowserException {
 		switch (browserName.trim().toLowerCase()) {
 		case "chrome": {
 			tldriver.set(new ChromeDriver(opManager.getChromeOptions()));
@@ -102,12 +119,39 @@ public class ActionDriver {
 			throw new BrowserException("====== INVALID BROWSER ======");
 		}
 		}
-		getLocalDriver().manage().window().maximize();
-		getLocalDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait));
-		getLocalDriver().manage().deleteAllCookies();
-		return getLocalDriver();
 	}
-	
+
+	private void initRemoteWebDriver(String browserName, int implicitWait) throws BrowserException {
+		String hubUrl = prop.getProperty("huburl");
+		try {
+			switch (browserName.trim().toLowerCase()) {
+			case "chrome": {
+				tldriver.set(new RemoteWebDriver(new URL(hubUrl), opManager.getChromeOptions()));
+				break;
+			}
+			case "edge": {
+				tldriver.set(new RemoteWebDriver(new URL(hubUrl), opManager.getEdgeOptions()));
+				break;
+			}
+			case "firefox": {
+				tldriver.set(new RemoteWebDriver(new URL(hubUrl), opManager.getFirefoxOptions()));
+				break;
+			}
+			case "safari": {
+				tldriver.set(new SafariDriver());
+				break;
+			}
+			default: {
+				log.error("====== INVALID BROWSER =======");
+				throw new BrowserException("====== INVALID BROWSER ======");
+			}
+			}
+		} catch (MalformedURLException e) {
+			log.error("====== INVALID URL =======");
+			throw new BrowserException("====== INVALID URL ======");
+		}
+	}
+
 	public static WebDriver getLocalDriver() {
 		return tldriver.get();
 	}
@@ -127,18 +171,18 @@ public class ActionDriver {
 			browserUtil.quitBrowser();
 		}
 	}
-	
+
 	public static File getScreenshotAsFile() {
-		File srcFile = ((TakesScreenshot)getLocalDriver()).getScreenshotAs(OutputType.FILE);
+		File srcFile = ((TakesScreenshot) getLocalDriver()).getScreenshotAs(OutputType.FILE);
 		return srcFile;
 	}
 
 	public static byte[] getScreenshotAsBytes() {
-		return ((TakesScreenshot)getLocalDriver()).getScreenshotAs(OutputType.BYTES);
+		return ((TakesScreenshot) getLocalDriver()).getScreenshotAs(OutputType.BYTES);
 	}
-	
+
 	public static String getScreenshotAsBase64() {
-		String screenshot = ((TakesScreenshot)getLocalDriver()).getScreenshotAs(OutputType.BASE64);
+		String screenshot = ((TakesScreenshot) getLocalDriver()).getScreenshotAs(OutputType.BASE64);
 		return screenshot;
 	}
 }

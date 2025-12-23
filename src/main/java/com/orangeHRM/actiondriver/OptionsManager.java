@@ -41,12 +41,17 @@ public class OptionsManager {
 		if(runInRemote)
 		{
 			co.setCapability("browserName", "chrome");
-			co.setBrowserVersion(prop.getProperty("browserVersion").trim());
+			
+			if(prop.getProperty("browserversion") != null) {
+				co.setBrowserVersion(prop.getProperty("browserversion").trim());
+			}
 			
 			Map<String,Object> selenoidOptions = new HashMap<>();
 			selenoidOptions.put("enableVNC", true);
 			selenoidOptions.put("screenResolution", "1920x1080x24");
-			selenoidOptions.put("name", prop.getProperty("testName"));
+			if(prop.getProperty("testname") != null) {
+				selenoidOptions.put("name", prop.getProperty("testname"));
+			}
 			
 			co.setCapability("selenoid:options", selenoidOptions);
 		}	
@@ -71,12 +76,16 @@ public class OptionsManager {
 		if(runInRemote)
 		{
 			fo.setCapability("browserName", "firefox");
-			fo.setBrowserVersion(prop.getProperty("browserVersion").trim());
+			if(prop.getProperty("browserversion") != null) {
+				fo.setBrowserVersion(prop.getProperty("browserversion").trim());
+			}
 			
 			Map<String,Object> selenoidOptions = new HashMap<>();
 			selenoidOptions.put("enableVNC", true);
 			selenoidOptions.put("screenResolution", "1920x1080x24");
-			selenoidOptions.put("name", prop.getProperty("testName"));
+			if(prop.getProperty("testname") != null) {
+				selenoidOptions.put("name", prop.getProperty("testname"));
+			}
 			
 			fo.setCapability("selenoid:options", selenoidOptions);
 		}	
@@ -101,12 +110,16 @@ public class OptionsManager {
 		if(runInRemote)
 		{
 			eo.setCapability("browserName", "edge");
-			eo.setBrowserVersion(prop.getProperty("browserVersion").trim());
+			if(prop.getProperty("browserversion") != null) {
+				eo.setBrowserVersion(prop.getProperty("browserversion").trim());
+			}
 			
 			Map<String,Object> selenoidOptions = new HashMap<>();
 			selenoidOptions.put("enableVNC", true);
 			selenoidOptions.put("screenResolution", "1920*1080*24");
-			selenoidOptions.put("name", prop.getProperty("testName"));
+			if(prop.getProperty("testname") != null) {
+				selenoidOptions.put("name", prop.getProperty("testname"));
+			}
 			
 			eo.setCapability("selenoid:options", selenoidOptions);
 		}
