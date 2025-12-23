@@ -24,7 +24,7 @@ public class LoginPageTest extends BaseTest{
 	@Description("Logging with valid credentials")
 	@Severity(SeverityLevel.CRITICAL)
 	@Owner("Anusha Bellala")
-	@Test(priority=Short.MAX_VALUE, groups = "sanity")
+	@Test(priority=Short.MAX_VALUE, groups = "sanity", description = "Logging with valid credentials")
 	public void doLoginTest() {
 		String userName = prop.getProperty("userName");
 		String password = prop.getProperty("password");
@@ -37,7 +37,7 @@ public class LoginPageTest extends BaseTest{
 	@Description("Verifying Login Page title")
 	@Severity(SeverityLevel.MINOR)
 	@Owner("Anusha Bellala")
-	@Test(groups = "sanity")
+	@Test(groups = "sanity", description = "Verifying Login Page title")
 	public void loginPageTitleTest() {
 		String actualTitle = loginPage.loginPageTitle();
 		Assert.assertEquals(actualTitle, LoginPageConstants.LOGIN_PAGE_TITLE_IS);
@@ -46,7 +46,7 @@ public class LoginPageTest extends BaseTest{
 	@Description("Verifying Login Page URL")
 	@Severity(SeverityLevel.MINOR)
 	@Owner("Anusha Bellala")
-	@Test
+	@Test(description = "Verifying Login Page URL")
 	public void loginPageURLTest() {
 		String actualURL = loginPage.loginPageUrl();
 		Assert.assertTrue(actualURL.contains(LoginPageConstants.LOGIN_PAGE_URL_HAS));
@@ -55,7 +55,7 @@ public class LoginPageTest extends BaseTest{
 	@Description("Verifying Forgot Password exist in Login Page")
 	@Severity(SeverityLevel.CRITICAL)
 	@Owner("Anusha Bellala")
-	@Test
+	@Test(description = "Verifying Forgot Password exist in Login Page")
 	public void doesForgotPswrdLinkExist()
 	{
 		boolean actualResult = loginPage.isForgotPswrdLinkExist();
