@@ -83,7 +83,7 @@ pipeline
         stage('Sanity Automation Test') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    git 'https://github.com/naveenanimation20/Dec2024OpenCartFramework.git'
+                    git 'https://github.com/AnushaGembali/OrangeHRMUiAutomation.git'
                     bat "mvn clean test -Dsurefire.suiteXmlFiles=src/test/resources/testrunners/testng_sanity.xml -Denv=stage"
                     
                 }
