@@ -41,7 +41,7 @@ pipeline
         stage('Regression Automation Tests') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                   dir("qa-repo"){
+                   dir('qa-repo'){
 					 git 'https://github.com/AnushaGembali/OrangeHRMUiAutomation.git'
                      bat "mvn clean test -DsuiteXmlFile=src/test/resources/testrunners/testng.xml -Denv=qa"
 				   }
